@@ -17,7 +17,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Slf4j
-@Component //빈등록
+@Component //빈등록, Spring Container가 객체화를 하고 주소값을 들고 있을 것이다.
 public class JwtTokenProvider {
     private final ObjectMapper objectMapper;
     private final JwtConst jwtConst;
