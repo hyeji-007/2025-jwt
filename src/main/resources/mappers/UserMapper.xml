@@ -13,6 +13,7 @@
     <insert id="insUserRole">
         INSERT INTO user_role
         (user_id, role)
+        VALUES
         <foreach collection="roles" item="item" separator=",">
             (#{id} , #{item})
         </foreach>
