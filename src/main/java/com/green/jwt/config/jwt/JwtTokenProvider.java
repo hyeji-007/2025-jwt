@@ -69,6 +69,7 @@ public class JwtTokenProvider {
     }
 
     //------ 만들어진 토큰(AT, RT)
+    //토큰에서 클레임 추출
     private Claims getClaims(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)

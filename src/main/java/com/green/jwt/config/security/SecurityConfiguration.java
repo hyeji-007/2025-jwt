@@ -1,18 +1,15 @@
 package com.green.jwt.config.security;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.springdoc.webmvc.core.service.RequestService;
-import org.springframework.boot.web.servlet.filter.OrderedFormContentFilter;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration //빈등록, 보통 빈등록 메소드가 포함되어 있을 가능성이 높다.
 @RequiredArgsConstructor
