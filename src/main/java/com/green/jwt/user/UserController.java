@@ -19,6 +19,7 @@ public class UserController {
 
     @PostMapping("sign-up")
     public int signUp(@RequestBody UserSignUpReq req) {
+        log.info("Sign up request: {}", req);
         return 0;
     }
 

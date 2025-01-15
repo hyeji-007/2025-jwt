@@ -1,4 +1,4 @@
-package com.green.jwt.config.security;
+package com.green.jwt.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RestController;
