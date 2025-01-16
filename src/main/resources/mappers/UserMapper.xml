@@ -26,9 +26,12 @@
         <result property="name" column="name" />
         <collection property="roles" resultMap="selRolesResultMap" />
     </resultMap>
-    <resultMap id="selRolesResultMap" type="String">
+
+    <resultMap id="selRolesResultMap" type="com.green.jwt.config.jwt.UserRole">
         <id property="role" column="role" />
     </resultMap>
+
+
     <select id="selUserWithRoles" resultMap="selUserWithRolesResultMap">
         SELECT A.id, A.email, A.pw, A.name, B.role
         FROM user A

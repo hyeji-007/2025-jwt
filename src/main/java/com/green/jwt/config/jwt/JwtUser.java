@@ -1,17 +1,19 @@
 package com.green.jwt.config.jwt;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.amqp.RabbitTemplateConfigurer;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
-
 
 class MyFunction implements Function<String, SimpleGrantedAuthority> {
     @Override
@@ -19,25 +21,25 @@ class MyFunction implements Function<String, SimpleGrantedAuthority> {
         return new SimpleGrantedAuthority(str);
     }
 }
-//동일성 - 주소값이 같은가
-//동등성 - 주소값은 다르지만 같은 값을 가지고 있음
+//동일성 - 주소값이 같느냐?
+//동등성 - 주소값은 다른 존재끼리 같은 값을 가지고 있음
 
 @Getter
-@EqualsAndHashCode //equals, hashCode 메소드 오버라이딩 >> 객체 비교와 해시 코드를 자동으로 생성 > Test 용도
+@EqualsAndHashCode//equals, hashCode 메소드 오버라이딩 > Test 용도
 @RequiredArgsConstructor
-// 논리적 동등성: 메모리 주소값이 다르더라도 필드 값이 같다면 동등하다고 판단
-public class JwtUser implements UserDetails {
+public class JwtUser implements UserDetails  { //Authentication 요소 중 Principal 요소에 들어가려면 UserDetails를 implemnts해야함
     private final long signedUserId;
     private final List<UserRole> roles; //인가(권한)처리 때 사용, ROLE_이름, ROLE_USER, ROLE_ADMIN
 
-    //리턴타입으로 콜렉션인데 콜렉션에 방 하나하나의 타입은 <>로 지정을 한다.
+    //리턴타입으로 콜렉션인데 콜렉션에 방 하나하나의 타입은 <> 지정을 한다.
     //<?>이렇게 하면 Object가 되기 때문에 모든 타입이 허용이 된다.
-    //<? extends GrantedAuthority>는 지정 타입이 꼭 GrantedAuthority를 포함, GrantedAuthority를 상속받은 객체만 가능하도록 제한을 거는 것
+    //<? extends GrantedAuthority>는 지정 타입이 꼭 GrantedAuthority포함, GrantedAuthority를 상속받은 객체만 가능하도록 제한을 거는 것
 
-    //<? super GrantedAuthority>는 지정 타입이 꼭 GrantedAuthority를 포함, GrantedAuthority의 부모 객체만 가능하도록 제한을 거는 것
+    //<? super GrantedAuthority>는 지정 타입이 꼭  GrantedAuthority포함, GrantedAuthority의 부모 객체만 가능하도록 제한을 거는 것
+
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        GrantedAuthority dddd = new SimpleGrantedAuthority("");
 //        List<GrantedAuthority> authorities = new ArrayList<>(roles.size());
 //        for(String role : roles) {
 //            authorities.add(new SimpleGrantedAuthority(role));
@@ -46,9 +48,7 @@ public class JwtUser implements UserDetails {
 
         Function fn2 = new MyFunction();
 
-
-
-        Function fn = new Function<String, SimpleGrantedAuthority>() { //Function 객체화 x
+        Function fn = new Function<String, SimpleGrantedAuthority>() {
             @Override
             public SimpleGrantedAuthority apply(String str) {
                 return new SimpleGrantedAuthority(str);
@@ -57,29 +57,54 @@ public class JwtUser implements UserDetails {
 
 
         return roles.stream() //List<String>을 Stream<List<String>>으로 변환
-                //SimpleGrantedAuthority::new은 메소드 참조라고 호칭
-
-                //interface를 implements할 때 람다식을 사용
-                //interface가 추상메소드를 단 하나만 가지고 있을 때 람다식 사용 가능
+                // SimpleGrantedAuthority::new은 메소드 참조라고 호칭
                 //.map(fn)
-                //.map(item -> new SimpleGrantedAuthority(item)) 와 같은 내용이다. == SimpleGrantedAuthority::new
-                //.map(item -> { return new SimpleGrantedAuthority(item); }) 와 같은 내용이다.
-                //여러줄의 메소드 작성시 중괄호 사용, 람다식에서 중괄호가 있으면 return을 해주어야 한다.
+                // .map(str -> new SimpleGrantedAuthority(str))와 같은 내용이다.
+                // .map(item -> { return new SimpleGrantedAuthority(item); }) //와 같은 내용이다.
                 //.map(fn2)
-                .map(item -> new SimpleGrantedAuthority(item.name())) //map은 똑같은 size의 스트림을 만든다. Stream<List<SimpleGrantedAuthority>>으로 변환
+                .map(item -> new SimpleGrantedAuthority(item.name())) //map은 똑같은 size의 스트림을 만든다. Stream<List<SimpleGrantedAuthority>>으로 변환,
                 .toList();
 
         //return roles.stream().map(SimpleGrantedAuthority::new).toList();
-        //stream() >> 리턴 메소드, map은 Function을 implements 한 객체의 주소값을 보낸다.
     }
 
+
+
+    @JsonIgnore
     @Override
     public String getPassword() {
         return null;
     }
 
+    @JsonIgnore
     @Override
     public String getUsername() {
         return "";
     }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
+
+
 }

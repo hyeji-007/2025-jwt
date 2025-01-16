@@ -2,6 +2,7 @@ package com.green.jwt.user.model;
 
 import com.green.jwt.config.jwt.UserRole;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -14,5 +15,5 @@ public class UserSelOne { //Dto
     private String email;
     private String pw;
     private String name;
-    private List<UserRole> roles = new ArrayList<>();
+    private List<UserRole> roles=new ArrayList<>();
 }
