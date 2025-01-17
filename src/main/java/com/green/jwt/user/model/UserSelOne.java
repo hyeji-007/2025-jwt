@@ -15,5 +15,5 @@ public class UserSelOne { //Dto
     private String email;
     private String pw;
     private String name;
-    private List<UserRole> roles=new ArrayList<>();
+    private List<UserRole> roles;
 }
