@@ -11,8 +11,8 @@ constant:
     claim-key: signedUser
     bearer-format: JWT
     scheme: Bearer
-    access-token-expiry: 600_000 #10분 (MS)
-    refresh-token-expiry: 1_296_000_000 # 15일 (MS)
+    access-token-expiry: 86_400_000 #1일 (MS) 60 * 60 * 24 * 1000
+    refresh-token-expiry: 1_296_000_000 # 15일 (MS) 60 * 60 * 24 * 15 * 1000
     refresh-token-cookie-name: refresh-token
     refresh-token-cookie-expiry: 1_296_000 #15일 (S)
 

@@ -30,9 +30,11 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable()) //SSR(Server Side Rendering)이 아니다. 보안관련 SSR 이 아니면 보안이슈가 없기 때문에 기능을 끈다.
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/api/admin").hasRole(UserRole.ADMIN.name())
+                        req.requestMatchers("/api/admin").hasRole(UserRole.ADMIN.name()) //인가 하나 처리
                                 .requestMatchers("/api/mentor").hasRole(UserRole.MENTOR.name())
-                                .requestMatchers("/api/admin-mentor").hasAnyRole(UserRole.ADMIN.name(), UserRole.MENTOR.name())
+                                .requestMatchers(HttpMethod.GET, "/api/user").hasRole(UserRole.USER.name())
+                                .requestMatchers(HttpMethod.PUT, "/api/user").hasRole(UserRole.USER.name())
+                                .requestMatchers("/api/admin-mentor").hasAnyRole(UserRole.ADMIN.name(), UserRole.MENTOR.name()) //인가 여러개 처리
                                 .requestMatchers("/api/admin", "/api/mentor", "/api/admin-mentor", "/api/user").authenticated()
 
                                 .anyRequest().permitAll()

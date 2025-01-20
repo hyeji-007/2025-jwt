@@ -32,9 +32,11 @@ import org.springframework.context.annotation.Configuration;
 //        , scheme = "Bearer"
 //)
 
-@Configuration
+@Configuration //메소드 빈은 싱글톤이 된다.
 @RequiredArgsConstructor
 public class SwaggerConfiguration {
+
+
 
         private final InfoConst infoConst;
         private final JwtConst jwtConst;
