@@ -39,6 +39,7 @@ public class UserController {
         return userService.getAccessToken(req);
     }
 
+
     @GetMapping
     public String get() {
         return "user";
