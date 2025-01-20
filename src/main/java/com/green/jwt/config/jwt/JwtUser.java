@@ -27,7 +27,7 @@ class MyFunction implements Function<String, SimpleGrantedAuthority> {
 @Getter
 @EqualsAndHashCode//equals, hashCode 메소드 오버라이딩 > Test 용도
 @RequiredArgsConstructor
-public class JwtUser implements UserDetails  { //Authentication 요소 중 Principal 요소에 들어가려면 UserDetails를 implemnts해야함
+public class JwtUser implements UserDetails  {
     private final long signedUserId;
     private final List<UserRole> roles; //인가(권한)처리 때 사용, ROLE_이름, ROLE_USER, ROLE_ADMIN
 
@@ -38,13 +38,14 @@ public class JwtUser implements UserDetails  { //Authentication 요소 중 Princ
     //<? super GrantedAuthority>는 지정 타입이 꼭  GrantedAuthority포함, GrantedAuthority의 부모 객체만 가능하도록 제한을 거는 것
 
     @JsonIgnore
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 //        List<GrantedAuthority> authorities = new ArrayList<>(roles.size());
 //        for(String role : roles) {
 //            authorities.add(new SimpleGrantedAuthority(role));
 //        }
 //        return authorities;
+
+
 
         Function fn2 = new MyFunction();
 
@@ -62,7 +63,7 @@ public class JwtUser implements UserDetails  { //Authentication 요소 중 Princ
                 // .map(str -> new SimpleGrantedAuthority(str))와 같은 내용이다.
                 // .map(item -> { return new SimpleGrantedAuthority(item); }) //와 같은 내용이다.
                 //.map(fn2)
-                .map(item -> new SimpleGrantedAuthority(item.name())) //map은 똑같은 size의 스트림을 만든다. Stream<List<SimpleGrantedAuthority>>으로 변환,
+                .map(item -> new SimpleGrantedAuthority(String.format("ROLE_%s", item.name()))) //map은 똑같은 size의 스트림을 만든다. Stream<List<SimpleGrantedAuthority>>으로 변환,
                 .toList();
 
         //return roles.stream().map(SimpleGrantedAuthority::new).toList();

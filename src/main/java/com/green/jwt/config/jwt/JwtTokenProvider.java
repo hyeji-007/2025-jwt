@@ -2,23 +2,19 @@ package com.green.jwt.config.jwt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.green.jwt.config.JwtConst;
+import com.green.jwt.config.constant.JwtConst;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -44,7 +40,7 @@ public class JwtTokenProvider {
     public String generateToken(JwtUser jwtUser, long tokenValidMilliSecond) {
         Date now = new Date();
         return Jwts.builder()
-                .header().type(jwtConst.getTokenName())
+                .header().type(jwtConst.getBearerFormat())
                 .and()
 
                 .issuer(jwtConst.getIssuer())
@@ -70,16 +66,17 @@ public class JwtTokenProvider {
 
     //------ 만들어진 토큰(AT, RT)
     public String resolveToken(HttpServletRequest req) {
-        String bearerToken = req.getHeader(jwtConst.getHeaderSchemaName()); //header 값을 받으면 무조건 String 타입
-        if (bearerToken == null || bearerToken.startsWith(jwtConst.getTokenType())) {
+        String bearerToken = req.getHeader(jwtConst.getHeaderKey());
+        if(bearerToken == null || !bearerToken.startsWith(jwtConst.getScheme())) {
             return null;
         }
         //토큰이 있고, Bearer로 문자열이 시작한다. 그러면 Bearer 내용을 제외한 토큰값만 리턴한다.
-        //"bearer".length() >> 6
-        //"bearer sfafsdfsadf".substring(3); >> 7~ 끝까지
-        return bearerToken.substring(jwtConst.getTokenType().length() + 1); //Bearer(빈칸)까지 index를 설정해야 하기 때문
+        //"bearer".length()  >>  6
+        //"bearer dsksdalkjsdaljkdsa".substring(3);  >>> d~끝까지
+        return bearerToken.substring(jwtConst.getScheme().length() + 1); //Bearer(빈칸)까지 index를 설정해야 하기 때문
         //return bearerToken.substring(jwtConst.getTokenType().length()).trim();
     }
+
 
 
     private Claims getClaims(String token) {
@@ -101,12 +98,8 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        try {
-            JwtUser jwtUser = getJwtUserFromToken(token);
-            return new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
-        } catch (Exception e) {
-            return null;
-        }
+        JwtUser jwtUser = getJwtUserFromToken(token);
+        return new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
     }
 
 }
