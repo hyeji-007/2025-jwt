@@ -74,7 +74,6 @@ public class UserService {
         String refreshToken = cookie.getValue();
         JwtUser jwtUser = jwtTokenProvider.getJwtUserFromToken(refreshToken);
         return jwtTokenProvider.generateAccessToken(jwtUser);
-
     }
 
 

@@ -30,6 +30,10 @@ public class UserController {
         return userService.signIn(req, response);
     }
 
+    /*
+    url이 /api/user/access-token이어야 한다. 왜냐하면 RefreshToken을 Cookie에 담을 때
+    path 설정을 위 url로 하였기 때문 (CookieUtils >> setCookie메소드 확인)
+     */
     @GetMapping("access-token")
     public String getAccessToken(HttpServletRequest req) {
         return userService.getAccessToken(req);
